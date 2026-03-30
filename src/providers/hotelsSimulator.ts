@@ -1,5 +1,7 @@
 import type { Accommodation, AccommodationProvider, SearchParams } from './types.js'
 
+const FETCH_TIMEOUT_MS = 5000
+
 interface SimulatorImage {
   URL: string
   MainImage?: string
@@ -29,7 +31,6 @@ interface SimulatorAccommodation {
 interface SimulatorResponse {
   statusCode: number
   body: {
-    success: string
     accommodations: SimulatorAccommodation[]
   }
 }
@@ -38,18 +39,32 @@ export class HotelsSimulatorProvider implements AccommodationProvider {
   constructor(private readonly url: string) {}
 
   async search(params: SearchParams): Promise<Accommodation[]> {
-    const response = await fetch(this.url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ query: params }),
-    })
+    const controller = new AbortController()
+    const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS)
 
-    if (!response.ok) {
-      throw new Error(`HotelsSimulator responded with status ${response.status}`)
+    try {
+      const response = await fetch(this.url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query: params }),
+        signal: controller.signal,
+      })
+
+      if (!response.ok) {
+        throw new Error(`HotelsSimulator responded with status ${response.status}`)
+      }
+
+      const data = (await response.json()) as SimulatorResponse
+      const accommodations = data.body?.accommodations
+
+      if (!Array.isArray(accommodations)) {
+        throw new Error('HotelsSimulator returned an unexpected response shape')
+      }
+
+      return accommodations.map((acc) => this.normalize(acc))
+    } finally {
+      clearTimeout(timeout)
     }
-
-    const data = (await response.json()) as SimulatorResponse
-    return data.body.accommodations.map((acc) => this.normalize(acc))
   }
 
   private normalize(acc: SimulatorAccommodation): Accommodation {
