@@ -1,4 +1,4 @@
-import type { Accommodation, AccommodationProvider, SearchParams } from './types.js'
+import type { Accommodation, AccommodationProvider, OnResults, SearchParams } from './types.js'
 
 const FETCH_TIMEOUT_MS = 5000
 
@@ -48,14 +48,14 @@ export class HotelsSimulatorProvider implements AccommodationProvider {
     this.maxGroupSize = maxGroupSize
   }
 
-  async search(params: SearchParams): Promise<Accommodation[]> {
+  async search(params: SearchParams, onResults: OnResults): Promise<void> {
     const groupSizes = this.groupSizeVariants(params.group_size)
 
-    const results = await Promise.allSettled(
-      groupSizes.map((group_size) => this.fetchAccommodations({ ...params, group_size })),
+    await Promise.allSettled(
+      groupSizes.map((group_size) =>
+        this.fetchAccommodations({ ...params, group_size }).then((results) => onResults(results)),
+      ),
     )
-
-    return results.flatMap((r) => (r.status === 'fulfilled' ? r.value : []))
   }
 
   private groupSizeVariants(baseSize: number): number[] {

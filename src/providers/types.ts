@@ -32,8 +32,10 @@ export interface Accommodation {
   price: AccommodationPrice
 }
 
+export type OnResults = (results: Accommodation[]) => Promise<void>
+
 export interface AccommodationProvider {
-  search(params: SearchParams): Promise<Accommodation[]>
+  search(params: SearchParams, onResults: OnResults): Promise<void>
 }
 
 export type SearchStatus = 'pending' | 'complete'

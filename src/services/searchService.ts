@@ -1,5 +1,5 @@
 import { randomUUID } from 'crypto'
-import type { AccommodationProvider, SearchParams, SearchRecord } from '../providers/types.js'
+import type { Accommodation, AccommodationProvider, SearchParams, SearchRecord } from '../providers/types.js'
 import type { ISearchStore } from '../store/ISearchStore.js'
 
 export class SearchService {
@@ -25,13 +25,12 @@ export class SearchService {
   }
 
   private async runSearch(id: string, params: SearchParams): Promise<void> {
+    const onResults = (results: Accommodation[]) => this.store.appendResults(id, results)
+
     const calls = this.providers.map((provider) =>
-      provider
-        .search(params)
-        .then((results) => this.store.appendResults(id, results))
-        .catch((err: unknown) => {
-          console.error('Provider search failed:', err)
-        }),
+      provider.search(params, onResults).catch((err: unknown) => {
+        console.error('Provider search failed:', err)
+      }),
     )
 
     await Promise.allSettled(calls)
