@@ -7,8 +7,8 @@ export function createSearchRouter(searchService: SearchService): Router {
   const router = Router()
   const controller = new SearchController(searchService)
 
-  router.post('/search', asyncHandler((req, res, next) => controller.initiateSearch(req, res, next)))
-  router.get('/search/:id', asyncHandler((req, res, next) => controller.getSearch(req, res, next)))
+  router.post('/search', asyncHandler((req, res) => controller.initiateSearch(req, res)))
+  router.get('/search/:id', asyncHandler((req, res) => controller.getSearch(req, res)))
 
   return router
 }
