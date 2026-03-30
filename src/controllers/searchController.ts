@@ -18,9 +18,13 @@ export class SearchController {
   }
 
   async getSearch(req: Request, res: Response): Promise<void> {
-    const id = req.params['id'] as string
-    const record = await this.searchService.getSearch(id)
+    const id = req.params['id']
+    if (id === undefined) {
+      res.status(HttpStatus.NotFound).json({ error: ErrorMessage.SearchNotFound })
+      return
+    }
 
+    const record = await this.searchService.getSearch(id)
     if (record === null) {
       res.status(HttpStatus.NotFound).json({ error: ErrorMessage.SearchNotFound })
       return

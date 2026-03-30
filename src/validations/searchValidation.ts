@@ -3,6 +3,8 @@ import { ErrorMessage } from '../constants/index.js'
 import { validResortIds } from '../data/resorts.js'
 import type { SearchParams } from '../providers/types.js'
 
+const DATE_REGEX = /^\d{2}\/\d{2}\/\d{4}$/
+
 const searchSchema = z.object({
   ski_site: z
     .number({
@@ -13,10 +15,12 @@ const searchSchema = z.object({
     .refine((id) => validResortIds.has(id), { message: ErrorMessage.SkiSiteInvalid }),
   from_date: z
     .string({ required_error: ErrorMessage.FromDateRequired })
-    .min(1, ErrorMessage.FromDateRequired),
+    .min(1, ErrorMessage.FromDateRequired)
+    .regex(DATE_REGEX, ErrorMessage.FromDateInvalid),
   to_date: z
     .string({ required_error: ErrorMessage.ToDateRequired })
-    .min(1, ErrorMessage.ToDateRequired),
+    .min(1, ErrorMessage.ToDateRequired)
+    .regex(DATE_REGEX, ErrorMessage.ToDateInvalid),
   group_size: z
     .number({
       required_error: ErrorMessage.GroupSizeRequired,
