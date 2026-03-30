@@ -53,6 +53,5 @@ The `tsconfig.json` uses strict settings worth noting:
 - `exactOptionalPropertyTypes: true` — optional props cannot be explicitly set to `undefined` unless the type includes `undefined`
 - `verbatimModuleSyntax: true` — use `import type` for type-only imports
 - `module: "nodenext"` — requires file extensions in relative imports (e.g. `./foo.js` not `./foo`)
-- `jsx: "react-jsx"` — JSX support enabled (no explicit React import needed)
 
 `rootDir` and `outDir` are commented out in tsconfig — set these when source layout is established.
