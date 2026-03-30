@@ -18,9 +18,9 @@ export class SearchService {
 
   async initiateSearch(params: SearchParams): Promise<string> {
     const id = randomUUID()
-    const winnerId = await this.store.acquireSlot(id, params)
+    const existingId = await this.store.acquireSlot(id, params)
 
-    if (winnerId !== id) return winnerId
+    if (existingId !== id) return existingId
 
     await this.store.create(id)
     void this.runSearch(id, params)
