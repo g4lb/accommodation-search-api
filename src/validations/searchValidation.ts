@@ -5,6 +5,15 @@ import type { SearchParams } from '../providers/types.js'
 
 const DATE_REGEX = /^\d{2}\/\d{2}\/\d{4}$/
 
+function isValidDate(value: string): boolean {
+  const [mm, dd, yyyy] = value.split('/') as [string, string, string]
+  const month = Number(mm)
+  const day = Number(dd)
+  const year = Number(yyyy)
+  const date = new Date(year, month - 1, day)
+  return date.getFullYear() === year && date.getMonth() === month - 1 && date.getDate() === day
+}
+
 const searchSchema = z.object({
   ski_site: z
     .number({
@@ -16,11 +25,13 @@ const searchSchema = z.object({
   from_date: z
     .string({ required_error: ErrorMessage.FromDateRequired })
     .min(1, ErrorMessage.FromDateRequired)
-    .regex(DATE_REGEX, ErrorMessage.FromDateInvalid),
+    .regex(DATE_REGEX, ErrorMessage.FromDateInvalid)
+    .refine(isValidDate, { message: ErrorMessage.FromDateInvalid }),
   to_date: z
     .string({ required_error: ErrorMessage.ToDateRequired })
     .min(1, ErrorMessage.ToDateRequired)
-    .regex(DATE_REGEX, ErrorMessage.ToDateInvalid),
+    .regex(DATE_REGEX, ErrorMessage.ToDateInvalid)
+    .refine(isValidDate, { message: ErrorMessage.ToDateInvalid }),
   group_size: z
     .number({
       required_error: ErrorMessage.GroupSizeRequired,
