@@ -1,5 +1,5 @@
 {
-  "name": "weski-assignment",
+  "name": "accommodation-search-api",
   "version": "1.0.0",
   "type": "module",
   "main": "dist/index.js",

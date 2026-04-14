@@ -1,4 +1,4 @@
-# WeSki — Accommodation Search API
+# Accommodation Search API
 
 Stateless REST API for searching ski accommodation availability.
 
@@ -41,4 +41,5 @@ Returns results. Poll until `status` is `"complete"`.
 | `PORT` | `3000` | HTTP server port |
 | `REDIS_URL` | `redis://localhost:6379` | Redis connection URL |
 | `MAX_GROUP_SIZE` | `6` | Maximum room capacity to search |
-| `HOTELS_SIMULATOR_URL` | *(provider URL)* | Accommodation provider endpoint |
+| `HOTELS_SIMULATOR_URL` | *(provider URL)* | Hotels simulator provider endpoint |
+| `BOOKING_URL` | *(provider URL)* | Booking provider endpoint |
