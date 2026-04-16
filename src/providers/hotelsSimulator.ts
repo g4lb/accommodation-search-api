@@ -21,6 +21,7 @@ interface SimulatorAccommodation {
     }
     Rating: string
     Beds: string
+    Amenities?: string[]
   }
   PricesInfo: {
     AmountAfterTax: string
@@ -108,6 +109,7 @@ export class HotelsSimulatorProvider implements AccommodationProvider {
       images: otherImages,
       rating: Number(acc.HotelInfo.Rating),
       beds: Number(acc.HotelInfo.Beds),
+      amenities: acc.HotelInfo.Amenities ?? [],
       position: {
         latitude: Number(position.Latitude),
         longitude: Number(position.Longitude),

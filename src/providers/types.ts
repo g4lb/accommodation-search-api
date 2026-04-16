@@ -1,8 +1,11 @@
 export interface SearchParams {
-  ski_site: number
+  location: string
   from_date: string
   to_date: string
   group_size: number
+  price_min?: number | undefined
+  price_max?: number | undefined
+  amenities?: string[] | undefined
 }
 
 export interface AccommodationDistance {
@@ -28,6 +31,7 @@ export interface Accommodation {
   images: string[]
   rating: number
   beds: number
+  amenities: string[]
   position: AccommodationPosition
   price: AccommodationPrice
 }

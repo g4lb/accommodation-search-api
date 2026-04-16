@@ -20,7 +20,16 @@ export class SearchStore implements ISearchStore {
   }
 
   private cacheKey(params: SearchParams): string {
-    return `search:key:${params.ski_site}:${params.from_date}:${params.to_date}:${params.group_size}`
+    const parts = [
+      params.location,
+      params.from_date,
+      params.to_date,
+      params.group_size,
+      params.price_min ?? '',
+      params.price_max ?? '',
+      ...(params.amenities ?? []).slice().sort(),
+    ]
+    return `search:key:${parts.join(':')}`
   }
 
   async acquireSlot(id: string, params: SearchParams): Promise<string> {
