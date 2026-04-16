@@ -44,7 +44,7 @@ Stateless REST API — any number of instances can run in parallel, sharing a Re
 | Services | `src/services/` | Business logic — fan-out, deduplication, background execution |
 | Providers | `src/providers/` | External API integrations (one per provider, all implement `AccommodationProvider`) |
 | Store | `src/store/` | Redis read/write — search records, result accumulation, deduplication index |
-| Data | `src/data/` | Static reference data (ski resorts) |
+| Validations | `src/validations/` | Zod schemas for request validation |
 
 ## TypeScript Configuration
 

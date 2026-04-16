@@ -12,6 +12,7 @@ interface BookingHotel {
   lng: number
   price_total: number
   price_net: number
+  amenities?: string[]
 }
 
 interface BookingResponse {
@@ -34,11 +35,17 @@ export class BookingProvider implements AccommodationProvider {
 
     try {
       const query = new URLSearchParams({
-        resort: String(params.ski_site),
+        location: params.location,
         checkin: params.from_date,
         checkout: params.to_date,
         guests: String(params.group_size),
       })
+
+      if (params.price_min !== undefined) query.set('price_min', String(params.price_min))
+      if (params.price_max !== undefined) query.set('price_max', String(params.price_max))
+      if (params.amenities !== undefined && params.amenities.length > 0) {
+        query.set('amenities', params.amenities.join(','))
+      }
 
       const response = await fetch(`${this.url}?${query.toString()}`, {
         signal: controller.signal,
@@ -67,6 +74,7 @@ export class BookingProvider implements AccommodationProvider {
       images: [],
       rating: h.star_rating,
       beds: h.bed_count,
+      amenities: h.amenities ?? [],
       position: {
         latitude: h.lat,
         longitude: h.lng,
